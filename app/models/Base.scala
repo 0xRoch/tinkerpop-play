@@ -11,6 +11,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import com.tinkerpop.blueprints.impls.orient.OrientGraph
+import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal
 
 /**
  * Base VertexFrame with meta getters / setters
@@ -59,6 +60,10 @@ trait DB[T <: BaseVertexFrame] {
   def graph = new FramedGraph(baseGraph)
 
   implicit def dbWrapper(vf: T) = new {
+
+    val instance = ODatabaseRecordThreadLocal.INSTANCE.get
+    System.out.println("1:" + Thread.currentThread().toString())
+
     /**
      * Saves pending changes to the Graph
      * @return
@@ -68,6 +73,8 @@ trait DB[T <: BaseVertexFrame] {
       vf.setUpdatedAt(ISODateTimeFormat.dateTime().print(new DateTime))
 
       future {
+        ODatabaseRecordThreadLocal.INSTANCE.set(instance)
+        System.out.println("2:" + Thread.currentThread().toString())
         baseGraph.asInstanceOf[TransactionalGraph].commit
         vf.asInstanceOf[T]
       }
@@ -79,6 +86,8 @@ trait DB[T <: BaseVertexFrame] {
       graph.removeVertex(graph.getVertices("uid", vf.getUID).toList.head)
 
       future {
+        ODatabaseRecordThreadLocal.INSTANCE.set(instance)
+        System.out.println("2:" + Thread.currentThread().toString())
         baseGraph.asInstanceOf[TransactionalGraph].commit
       }
     }
