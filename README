@@ -1,4 +1,3 @@
-This is your new Play application
-=====================================
+sbt run
 
-This file will be packaged with your application, when using `play dist`.
+browse : localhost:9000
