@@ -1,17 +1,16 @@
 package models
 
-import com.tinkerpop.frames.{Adjacency, Property, VertexFrame, FramedGraph}
-import com.tinkerpop.blueprints.{TransactionalGraph, Element}
+import com.tinkerpop.frames.{Property, VertexFrame, FramedGraph}
+import com.tinkerpop.blueprints.TransactionalGraph
 import scala.collection.JavaConversions._
-import com.tinkerpop.gremlin.java.GremlinPipeline
 import java.util.UUID
-import com.tinkerpop.frames.structures.FramedVertexIterable
-import scala.concurrent.{future, Future}
+import scala.concurrent.{ExecutionContext, future, Future}
 import play.api.libs.concurrent.Execution.Implicits._
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 import com.tinkerpop.blueprints.impls.orient.OrientGraph
 import com.orientechnologies.orient.core.db.ODatabaseRecordThreadLocal
+import java.util.concurrent.Executors
 
 /**
  * Base VertexFrame with meta getters / setters
@@ -63,6 +62,8 @@ trait DB[T <: BaseVertexFrame] {
 
     val instance = ODatabaseRecordThreadLocal.INSTANCE.get
     System.out.println("1:" + Thread.currentThread().toString())
+
+    implicit val ec = ExecutionContext.fromExecutorService(Executors.newSingleThreadExecutor)
 
     /**
      * Saves pending changes to the Graph
