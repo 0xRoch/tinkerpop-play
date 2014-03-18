@@ -1,0 +1,2 @@
+language: scala
+before_script: sbt test:compile
