@@ -1,3 +1,0 @@
-sbt run
-
-browse : localhost:9000
