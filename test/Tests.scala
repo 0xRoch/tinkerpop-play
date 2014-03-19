@@ -20,7 +20,6 @@ class GriffonApiSpec extends PlaySpecification {
   }
 
   "test 1" in {
-    // TEST 1
 
     val prevCount = Foo.list.size
 
@@ -32,26 +31,24 @@ class GriffonApiSpec extends PlaySpecification {
   }
 
   "TEST 2" in {
-    // TEST 2
 
     val prevCount2 = Bar.list.size
-    Await.result(for {
+    await(for {
       foo <- Foo().save
       bar <- Bar().save
     } yield {
-      Bar.list.size must be_>(prevCount2)
-    }, Duration.Inf)
+      Bar.list.size
+    }) must be_>(prevCount2)
 
   }
 
   "TEST 3" in {
-    // TEST 3
 
-    Await.result(Foo().save.map(x => {
-      x.setName("test2")
+    await(Foo().save.map(x => {
+      x.setName("test3")
       x.save
 
-      Foo.list.filter(_.getName eq "test2").size must equalTo(1)
-    }), Duration.Inf)
+      Foo.list.filter(_.getName eq "test3").size
+    })) must equalTo(1)
   }
 }
