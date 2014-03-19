@@ -54,7 +54,7 @@ trait DB[T <: BaseVertexFrame] {
 
   val CLASS_PROPERTY_NAME = "class_"
 
-  val baseGraph = new OrientGraph("local:/tmp/orient", "admin", "admin")
+  val baseGraph = new OrientGraph("local:./tmp/orient", "admin", "admin")
 
   def graph = new FramedGraph(baseGraph)
 
