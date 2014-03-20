@@ -46,9 +46,9 @@ class GriffonApiSpec extends PlaySpecification {
 
     await(Foo().save.map(x => {
       x.setName("test3")
-      x.save
-
-      Foo.list.filter(_.getName eq "test3").size
+      await(x.save.map(x => {
+	Foo.list.filter(_.getName eq "test3").size
+      }))
     })) must equalTo(1)
   }
 }
